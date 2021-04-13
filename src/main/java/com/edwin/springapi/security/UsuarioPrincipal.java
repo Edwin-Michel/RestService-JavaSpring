@@ -39,6 +39,10 @@ public class UsuarioPrincipal implements UserDetails {
 
 	@Override
 	public String getUsername() {
+		return user.getNombre();
+	}
+	
+	public String getEmail() {
 		return user.getEmail();
 	}
 

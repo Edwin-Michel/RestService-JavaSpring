@@ -95,6 +95,7 @@ public class VentaService {
 				Producto producto = prodRepo.findById(line.getProducto().getId())
 				.orElseThrow(() -> new NoDataFoudException("No existe el producto " + line.getProducto().getId()));	
 				line.setPrecio(producto.getPrecio());
+				line.setProducto(producto);
 				line.setTotal(producto.getPrecio() * line.getCantidad());
 				total += line.getTotal();
 			}
@@ -120,6 +121,9 @@ public class VentaService {
 		try {
 			Double total = 0.0;
 			VentaValidator.validar(venta);
+/****************TODO: Obtener el usuario al registrar una venta***********************/		
+			UsuarioPrincipal principal = (UsuarioPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			Usuario user = principal.getUser();
 			
 			for (VentaLine line: venta.getVentas()) {
 				Producto producto = prodRepo.findById(line.getProducto().getId())
@@ -133,6 +137,9 @@ public class VentaService {
 			venta.getVentas().forEach(line -> line.setVenta(venta));
 			Venta order = repo.findById(venta.getId())
 					.orElseThrow(()-> new NoDataFoudException("La venta no existe"));
+			
+/****************TODO: Obtener el usuario al registrar una venta***********************/
+			venta.setUsuario(user);
 			venta.setDate(order.getDate());
 			
 			List<VentaLine> deletedLines = order.getVentas();

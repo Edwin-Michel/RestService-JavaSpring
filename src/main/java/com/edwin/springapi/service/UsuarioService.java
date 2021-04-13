@@ -35,7 +35,7 @@ public class UsuarioService {
 			Usuario user = repo.findByEmail(usuario.getEmail())
 			//Usuario user = repo.findByNombre(usuario.getNombre())
 					.orElse(null);
-			if (user != null) throw new ValidateServiceException("El usuario ya existe");
+			if (user != null) throw new ValidateServiceException("Usuario invalido");
 			
 			//Encriptar el password
 			String passwordEncriptado = encoder.encode(usuario.getPassword());
@@ -76,11 +76,11 @@ public class UsuarioService {
 	
 	public String createToken (Usuario user) {
 		Date now = new Date();
-		Date expired = new Date(now.getTime() + (1000*60*60));
+		Date expired = new Date(now.getTime() + (1000*60*60*24*(30*2)));
 		
 		return Jwts.builder()
-				.setSubject(user.getEmail())
-				//.setSubject(user.getNombre())
+				//.setSubject(user.getEmail())
+				.setSubject(user.getNombre())
 				.setIssuedAt(now)
 				.setExpiration(expired)
 				.signWith(SignatureAlgorithm.HS512, jwtSecret)

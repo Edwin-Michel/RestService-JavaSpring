@@ -31,10 +31,8 @@ public class UsuarioValidator {
 		if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
 			throw new ValidateServiceException("El email es requerido");
 		}
-		if (user.getEmail().length() > 20) {
-			throw new ValidateServiceException("El email es muy largo");
-		}
-		if (user.getEmail().length() < 10) {
+		
+		if (user.getEmail().length() < 7) {
 			throw new ValidateServiceException("El email es invalido");
 		}
 		

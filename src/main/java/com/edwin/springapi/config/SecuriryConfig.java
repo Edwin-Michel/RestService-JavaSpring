@@ -47,7 +47,9 @@ public class SecuriryConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers(
 						"/login",
-						"/signup"
+						"/signup",
+						"/products", 
+						"/products/{id}"
 						)
 					.permitAll()
 				.anyRequest()

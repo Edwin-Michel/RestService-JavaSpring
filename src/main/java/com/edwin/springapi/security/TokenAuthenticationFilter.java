@@ -34,13 +34,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			String jwt = getTokenFromRequest(request);
 			if (StringUtils.hasText(jwt) && service.validateToken(jwt)) {
 				
-				String email = service.getUsernameFromToken(jwt);
-				Usuario user = repo.findByEmail(email)
+				//String email = service.getUsernameFromToken(jwt);
+				String nombre = service.getUsernameFromToken(jwt);
+				Usuario user = repo.findByNombre(nombre)
 						.orElseThrow(() -> new NoDataFoudException("El usuario no existe"));
 				
-				/*String username = service.getUsernameFromToken(jwt);
-				Usuario user = repo.findByNombre(username)
+				/*Usuario user = repo.findByNombre(username)
 						.orElseThrow(() -> new NoDataFoudException("El usuario no existe"));*/
+				
 				
 				UsuarioPrincipal principal = UsuarioPrincipal.create(user);
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
@@ -48,7 +49,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 		} catch (Exception e) {
-			log.error("Error al autenticar al usuario ", e);
+			log.error("Error al autenticar usuario ", e);
 		}
 		filterChain.doFilter(request, response);
 	}

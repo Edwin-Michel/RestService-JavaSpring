@@ -21,7 +21,7 @@ public class VentaController {
 	private VentaConverter converter = new VentaConverter();
 	
 	// Obtener un venta por id
-	@GetMapping(value = "/orders/{id}")
+	@GetMapping(value = "/orders-auth/{id}")
 	public ResponseEntity<StandardResponse<VentaDTO>> getVenta(@PathVariable("id") Long id) {
 		Venta venta = service.obtenerVenta(id);
 		VentaDTO ventaDTO = converter.convertirAdto(venta);
@@ -30,15 +30,15 @@ public class VentaController {
 	}
 
 	// Eliminar una venta
-	@DeleteMapping(value = "/oreders/{id}")
+	@DeleteMapping(value = "/oreders-auth/{id}")
 	public ResponseEntity<StandardResponse<?>> deleteVenta(@PathVariable("id") Long id) {
 		service.eliminarVenta(id);
-		StandardResponse<?> response = new StandardResponse<>(true, "Venta eliminado", null);
+		StandardResponse<?> response = new StandardResponse<>(true, "Venta eliminada", null);
 		return new ResponseEntity<StandardResponse<?>>(response, HttpStatus.OK);
 	}
 
 	// Obtener todas las ventas
-	@GetMapping(value = "/orders")
+	@GetMapping(value = "/orders-auth")
 	public ResponseEntity<StandardResponse<List<VentaDTO>>> getVentas (
 			@RequestParam (value="pageNumber", required=false, defaultValue = "0") int pageNumber,
 			@RequestParam (value="pageSize", required=false, defaultValue = "20") int pageSize ){
@@ -50,7 +50,7 @@ public class VentaController {
 	}
 
 	// Registrar ua nueva venta
-	@PostMapping(value = "/orders")
+	@PostMapping(value = "/orders-auth")
 	public ResponseEntity<StandardResponse<VentaDTO>> saveVenta(@RequestBody VentaDTO dto) {
 		Venta venta = service.guardarVenta(converter.convertirAentidad(dto));
 		VentaDTO ventaDTO = converter.convertirAdto(venta);
@@ -59,7 +59,7 @@ public class VentaController {
 	}
 
 	// Actualizar una venta
-	@PutMapping(value = "/orders")
+	@PutMapping(value = "/orders-auth")
 	public ResponseEntity<StandardResponse<VentaDTO>> updateVenta(@RequestBody VentaDTO dto) {
 		Venta venta = service.actualizarVenta(converter.convertirAentidad(dto));
 		VentaDTO ventaDTO = converter.convertirAdto(venta);

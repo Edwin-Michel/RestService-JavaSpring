@@ -15,56 +15,77 @@ import com.edwin.springapi.utils.StandardResponse;
 
 @RestController
 public class ProductoController {
-	
+
 	@Autowired
 	private ProductoService service;
-	
+
 	private ProductoConverter converter = new ProductoConverter();
-	
-	//Obtener un producto por id
-	@GetMapping(value="/products/{id}")
-	public ResponseEntity<StandardResponse<ProductoDTO>> getProduct (@PathVariable("id") Long id) {
+
+	// Obtener un producto por id
+	@GetMapping(value = "/products/{id}")
+	public ResponseEntity<StandardResponse<ProductoDTO>> getProduct(@PathVariable("id") Long id) {
 		Producto prod = service.obtenerProducto(id);
 		ProductoDTO proDTO = converter.convertirAdto(prod);
 		StandardResponse<ProductoDTO> response = new StandardResponse<>(true, "successful", proDTO);
-	 	return new ResponseEntity<StandardResponse<ProductoDTO>>(response, HttpStatus.OK);
+		return new ResponseEntity<StandardResponse<ProductoDTO>>(response, HttpStatus.OK);
 	}
-	
-	//Eliminar un producto
-	@DeleteMapping(value="/products/{id}")
-	public ResponseEntity<StandardResponse<?>> updateProduct (@PathVariable("id") Long id) {
+
+	// Obtener un producto por id con autorizacion
+	@GetMapping(value = "/products-auth/{id}")
+	public ResponseEntity<StandardResponse<ProductoDTO>> getProductAuth(@PathVariable("id") Long id) {
+		Producto prod = service.obtenerProducto(id);
+		ProductoDTO proDTO = converter.convertirAdto(prod);
+		StandardResponse<ProductoDTO> response = new StandardResponse<>(true, "successful", proDTO);
+		return new ResponseEntity<StandardResponse<ProductoDTO>>(response, HttpStatus.OK);
+	}
+
+	// Eliminar un producto 
+	@DeleteMapping(value = "/products-auth/{id}")
+	public ResponseEntity<StandardResponse<?>> updateProduct(@PathVariable("id") Long id) {
 		service.eliminarProducto(id);
 		StandardResponse<?> response = new StandardResponse<>(true, "Producto eliminado", null);
-	return new ResponseEntity<StandardResponse<?>>(response, HttpStatus.OK);
+		return new ResponseEntity<StandardResponse<?>>(response, HttpStatus.OK);
 	}
-	
-	//Obtener todos los productos
-	@GetMapping(value="/products")
-	public ResponseEntity<StandardResponse<List<ProductoDTO>>> getProducts (
-			@RequestParam (value="pageNumber", required=false, defaultValue = "0") int pageNumber,
-			@RequestParam (value="pageSize", required=false, defaultValue = "20") int pageSize ){
+
+	// Obtener todos los productos
+	@GetMapping(value = "/products")
+	public ResponseEntity<StandardResponse<List<ProductoDTO>>> getProducts(
+			@RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
 		Pageable page = PageRequest.of(pageNumber, pageSize);
 		List<Producto> productos = service.obtenerProductos(page);
 		List<ProductoDTO> productosDto = converter.convertirAlistDto(productos);
 		StandardResponse<List<ProductoDTO>> response = new StandardResponse<>(true, "successful", productosDto);
 		return new ResponseEntity<StandardResponse<List<ProductoDTO>>>(response, HttpStatus.OK);
 	}
-	
-	//Registrar un nuevo producto
-	@PostMapping(value="/products")
-	public ResponseEntity<StandardResponse<ProductoDTO>> saveProduct (@RequestBody ProductoDTO dto) {
+
+	// Obtener todos los productos con autorizacion
+	@GetMapping(value = "/products-auth")
+	public ResponseEntity<StandardResponse<List<ProductoDTO>>> getProductsAuth(
+			@RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
+		Pageable page = PageRequest.of(pageNumber, pageSize);
+		List<Producto> productos = service.obtenerProductos(page);
+		List<ProductoDTO> productosDto = converter.convertirAlistDto(productos);
+		StandardResponse<List<ProductoDTO>> response = new StandardResponse<>(true, "successful", productosDto);
+		return new ResponseEntity<StandardResponse<List<ProductoDTO>>>(response, HttpStatus.OK);
+	}
+
+	// Registrar un nuevo producto
+	@PostMapping(value = "/products-auth")
+	public ResponseEntity<StandardResponse<ProductoDTO>> saveProduct(@RequestBody ProductoDTO dto) {
 		Producto prod = service.guadarProducto(converter.convertirAentidad(dto));
-		ProductoDTO proDTO = converter.convertirAdto(prod);		
+		ProductoDTO proDTO = converter.convertirAdto(prod);
 		StandardResponse<ProductoDTO> response = new StandardResponse<>(true, "successful", proDTO);
 		return new ResponseEntity<StandardResponse<ProductoDTO>>(response, HttpStatus.CREATED);
 	}
-	
-	//Actualizar un nuevo producto
-	@PutMapping(value="/products")
-	public ResponseEntity<StandardResponse<ProductoDTO>> updateProduct (@RequestBody ProductoDTO dto) {
+
+	// Actualizar un nuevo producto
+	@PutMapping(value = "/products-auth")
+	public ResponseEntity<StandardResponse<ProductoDTO>> updateProduct(@RequestBody ProductoDTO dto) {
 		Producto prod = service.actualizarProducto(converter.convertirAentidad(dto));
 		ProductoDTO proDTO = converter.convertirAdto(prod);
 		StandardResponse<ProductoDTO> response = new StandardResponse<>(true, "successful", proDTO);
-	return new ResponseEntity<StandardResponse<ProductoDTO>>(response, HttpStatus.OK);
+		return new ResponseEntity<StandardResponse<ProductoDTO>>(response, HttpStatus.OK);
 	}
 }

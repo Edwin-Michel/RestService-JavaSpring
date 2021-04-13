@@ -13,7 +13,7 @@ import lombok.Setter;
 @Builder
 public class LoginRequestDTO {
 	
-	private String nombre;
+	//private String nombre;
 	
 	private String email;
 	
